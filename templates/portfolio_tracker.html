@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Here you can track Fund's portfolio</h1>
+  <form action="{{ url_for('fund_search') }}" method="get">
+    <input type="text" name="query" placeholder="Fund Search">
+    <input type="submit" value="Search">
+  </form>
+  <p>Search blok, list block.</p>
+{% endblock %}

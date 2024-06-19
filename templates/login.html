@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Login</h1>
+{% set flask_messages = get_flashed_messages() %}
+{% if flask_messages %}
+<ul>
+    {% for message in flask_messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+<form method="post">
+    {{ form.hidden_tag() }}
+    <label for="username">Username</label>
+    {{ form.username() }}
+    <label for="password">Password</label>
+    {{ form.password() }}
+    <button>Login</button>
+</form>
+{% endblock %}

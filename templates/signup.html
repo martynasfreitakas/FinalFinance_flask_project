@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Sign Up</h1>
+  {% set flask_messages = get_flashed_messages() %}
+  {% if flask_messages %}
+    <ul>
+      {% for message in flask_messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  <form method="post">
+    {{ form.hidden_tag() }}
+    <label for="username">Username</label>
+    {{ form.username(id='username') }}
+    <label for="email">Email</label>
+    {{ form.email(id='email') }}
+    <label for="name">Name</label>
+    {{ form.name(id='name') }}
+    <label for="surname">Surname</label>
+    {{ form.surname(id='surname') }}
+    <label for="phone_number">Phone Number</label>
+    {{ form.phone_number(id='phone_number') }}
+    <label for="password">Password</label>
+    {{ form.password(id='password') }}
+    {{ form.submit() }}
+  </form>
+{% endblock %}

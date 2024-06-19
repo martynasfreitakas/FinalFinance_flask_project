@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+/* Body */
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+}
+
+/* Top Header */
+.top-header {
+    background-color: #ff671d;
+    color: #fff;
+    padding: 2px;
+    text-align: center;
+}
+
+/* Header */
+header {
+    background-color: #ffffff;
+    color: #ff671d;
+    padding: 0px;
+    text-align: center;
+}
+
+/* Navigation Bar */
+nav {
+    display: flex;
+    justify-content: space-between; /* This will distribute the space evenly between the three sections */
+    background-color: #ffffff;
+    color: #fff;
+    padding: 20px;
+    text-align: left;
+    border: 2px solid #ff671d;
+    border-left: none;
+    border-right: none;
+}
+
+.nav-logo, .nav-main, .nav-user {
+    display: flex;
+    align-items: center; /* This will vertically center the items within each section */
+}
+
+#nav-logo {
+    height: 50px; /* Adjust as needed */
+    width: 50px; /* Adjust as needed */
+}
+
+nav a {
+    color: #53575a;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+nav ul li a:hover {
+    color: #666; /* This changes the link color to a lighter shade when hovered */
+}
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+ul {
+    list-style-type: none;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex; /* This makes the list items display in a row */
+    flex-direction: row; /* This ensures the direction is a row */
+    justify-content: center; /* This centers the list items */
+}
+
+nav ul li a {
+    position: relative;
+    text-decoration: none;
+    color: #53575a;
+    transition: color 0.3s ease;
+}
+
+nav ul li a::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background-color: #53575a;
+    transition: all 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: #53575a;
+}
+
+nav ul li a:hover::after {
+    left: calc(50% - 5px);
+    width: 10px;
+    height: 10px;
+    bottom: -15px; /* This lowers the dot by 10px */
+    background-color: #ff671d;
+}

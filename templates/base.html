@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="top-header">
+        {% if session['username'] %}
+        <p>Europian markets opens: 10:00 &emsp;&emsp;&emsp;| &emsp;&emsp;&emsp; US markets opens: 16:30 </p>
+        {% else %}
+        <p>Signup to check financial data&emsp;<a href="{{ url_for('signup') }}">Register Now</a></p>
+        {% endif %}
+    </div>
+        <header>
+            <nav>
+                <div class="nav-logo">
+                    <a href="{{ url_for('home') }}">
+                        <img src="{{ url_for('static', filename='logo.jpg') }}" alt="Logo" id="nav-logo">
+                    </a>
+                </div>
+                <div class="nav-main">
+                    <ul>
+                        <li><a href="{{ url_for('home') }}">Home</a></li>
+                        <li><a href="{{ url_for('portfolio_tracker') }}">Portfolio Tracker</a></li>
+                        <li><a href="{{ url_for('about') }}">About</a></li>
+                    </ul>
+                </div>
+                <div class="nav-user">
+                    <ul>
+                        {% if session['username'] %}
+                        <li><a href="{{ url_for('portfolio_tracker') }}">Portfolio Tracker</a></li>
+                        <li><a href="{{ url_for('home') }}">home</a></li>
+                        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                        {% else %}
+                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                        <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+        </header>
+    <main>
+        {% block content %}{% endblock %}
+        {% block password_change %}{% endblock %}
+    </main>
+    <footer>
+        <p>&copy; {{year}} FinalFinance</p>
+    </footer>
+</body>
+</html>
