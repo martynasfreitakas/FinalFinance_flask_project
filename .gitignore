@@ -1,7 +1,6 @@
 .venv/
 .env
 *instance/
-*sec-edgar-filings/
 TODO.md
 FUNDS.md
 __pycache__/
