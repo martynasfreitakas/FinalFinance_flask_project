@@ -12,3 +12,12 @@ class User(db.Model):
 
     def __repr__(self):
         return f'<User {self.username}, Name: {self.name}, Email: {self.email}>'
+
+
+class CompanyData(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    company_name = db.Column(db.String(80), nullable=False)
+    cik = db.Column(db.String(10), nullable=False)
+
+    def __repr__(self):
+        return f'<CompanyData {self.company_name}, CIK: {self.cik}>'
