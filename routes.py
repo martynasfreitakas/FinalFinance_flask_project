@@ -1,8 +1,8 @@
 from datetime import datetime
 from database import db
-from flask import render_template, flash, redirect, url_for, session
+from flask import render_template, flash, redirect, url_for, session, request
 from forms import SignUpForm, LoginForm
-from models import User
+from models import User, CompanyData
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
@@ -63,7 +63,16 @@ def my_routes(app):
         flash('You have been logged out.')
         return redirect(url_for('home'))
 
-    @app.route('/fund_search')
+    @app.route('/fund_search', methods=['GET'])
     def fund_search():
-        return render_template('portfolio_tracker.html', year=datetime.now().year)
-
+        query = request.args.get('query', default='', type=str)
+        if not query:
+            flash('Please enter a company name or CIK.')
+            return render_template('portfolio_tracker.html', year=datetime.now().year)
+        with app.app_context():
+            if query.isdigit():
+                companies = CompanyData.query.filter(CompanyData.cik.like(f'%{query}%')).all()
+            else:
+                companies = CompanyData.query.filter(CompanyData.company_name.like(f'%{query}%')).all()
+            results = [(company.company_name, company.cik) for company in companies]
+            return render_template('portfolio_tracker.html', results=results, year=datetime.now().year)

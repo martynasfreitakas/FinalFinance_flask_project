@@ -27,7 +27,7 @@ header {
 /* Navigation Bar */
 nav {
     display: flex;
-    justify-content: space-between; /* This will distribute the space evenly between the three sections */
+    justify-content: space-between;
     background-color: #ffffff;
     color: #fff;
     padding: 20px;
@@ -39,12 +39,12 @@ nav {
 
 .nav-logo, .nav-main, .nav-user {
     display: flex;
-    align-items: center; /* This will vertically center the items within each section */
+    align-items: center;
 }
 
 #nav-logo {
-    height: 50px; /* Adjust as needed */
-    width: 50px; /* Adjust as needed */
+    height: 50px;
+    width: 50px;
 }
 
 nav a {
@@ -54,7 +54,7 @@ nav a {
 }
 
 nav ul li a:hover {
-    color: #666; /* This changes the link color to a lighter shade when hovered */
+    color: #666;
 }
 
 /* Footer */
@@ -75,9 +75,9 @@ ul {
 nav ul {
     list-style-type: none;
     padding: 0;
-    display: flex; /* This makes the list items display in a row */
-    flex-direction: row; /* This ensures the direction is a row */
-    justify-content: center; /* This centers the list items */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 nav ul li a {
@@ -107,6 +107,13 @@ nav ul li a:hover::after {
     left: calc(50% - 5px);
     width: 10px;
     height: 10px;
-    bottom: -15px; /* This lowers the dot by 10px */
+    bottom: -15px;
     background-color: #ff671d;
+}
+
+.company-search-results-block {
+    background-color: #f9f9f9;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 5px;
 }

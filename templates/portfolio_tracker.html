@@ -2,9 +2,39 @@
 
 {% block content %}
   <h1>Here you can track Fund's portfolio</h1>
-  <form action="{{ url_for('fund_search') }}" method="get">
-    <input type="text" name="query" placeholder="Fund Search">
-    <input type="submit" value="Search">
-  </form>
-  <p>Search blok, list block.</p>
+    {% set flask_messages = get_flashed_messages() %}
+    {% if flask_messages %}
+    <ul>
+        {% for message in flask_messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div>
+    <form action="{{ url_for('fund_search') }}" method="get">
+      <input type="text" name="query" placeholder="Company Search by Name">
+      <input type="submit" value="Search">
+    </form>
+    </div>
+    <br>
+    <div>
+    <form action="{{ url_for('fund_search') }}" method="get">
+      <input type="text" name="query" placeholder="Company Search by CIK">
+      <input type="submit" value="Search">
+    </form>
+    </div>
+
+    <div class="company-search-results-block">
+      <h2>Search Results</h2>
+        {% if results %}
+      <ul>
+        {% for company_name, cik in results %}
+          <li>{{ company_name }}: {{ cik }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No results found</p>
+    {% endif %}
+  </div>
+
 {% endblock %}
