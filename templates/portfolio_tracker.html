@@ -28,8 +28,8 @@
       <h2>Search Results</h2>
         {% if results %}
       <ul>
-        {% for company_name, cik in results %}
-          <li>{{ company_name }}: {{ cik }}</li>
+        {% for company_name, cik, url in results %}
+          <li><a href="{{ url }}" target="_blank">{{ company_name }}: {{ cik }}</a></li>
         {% endfor %}
       </ul>
     {% else %}

@@ -74,5 +74,13 @@ def my_routes(app):
                 companies = CompanyData.query.filter(CompanyData.cik.like(f'%{query}%')).all()
             else:
                 companies = CompanyData.query.filter(CompanyData.company_name.like(f'%{query}%')).all()
-            results = [(company.company_name, company.cik) for company in companies]
+            results = [(company.company_name, company.cik, url_for('fund_details', cik=company.cik)) for company in
+                       companies]
             return render_template('portfolio_tracker.html', results=results, year=datetime.now().year)
+
+    @app.route('/fund_details/<cik>')
+    def fund_details(cik):
+
+        # Retrieve the fund details using the CIK
+        # Render a template and pass the fund details to it
+        pass
