@@ -14,10 +14,32 @@ class User(db.Model):
         return f'<User {self.username}, Name: {self.name}, Email: {self.email}>'
 
 
-class CompanyData(db.Model):
+class FundData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    company_name = db.Column(db.String(80), nullable=False)
+    fund_name = db.Column(db.String(80), nullable=False)
     cik = db.Column(db.String(10), nullable=False)
+    submissions = db.relationship('Submission', back_populates='fund_data', cascade="all, delete-orphan")
+    fund_holdings = db.relationship('FundHoldings', back_populates='fund_data', cascade="all, delete-orphan")
 
-    def __repr__(self):
-        return f'<CompanyData {self.company_name}, CIK: {self.cik}>'
+
+class Submission(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    cik = db.Column(db.String(10), nullable=False)
+    company_name = db.Column(db.String(200), nullable=False)
+    submission_type = db.Column(db.String(10), nullable=False)
+    filed_of_date = db.Column(db.Date, nullable=False)
+    accession_number = db.Column(db.String(20), nullable=False)
+    fund_data_id = db.Column(db.Integer, db.ForeignKey('fund_data.id'))
+    fund_data = db.relationship('FundData', back_populates='submissions')
+
+
+class FundHoldings(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    company_name = db.Column(db.String(200), nullable=False)
+    value_usd = db.Column(db.Float, nullable=False)
+    share_amount = db.Column(db.Float, nullable=False)
+    cusip = db.Column(db.String(9), nullable=False)
+    cik = db.Column(db.String(10), nullable=False)
+    accession_number = db.Column(db.String(20), nullable=False)
+    fund_data_id = db.Column(db.Integer, db.ForeignKey('fund_data.id'))
+    fund_data = db.relationship('FundData', back_populates='fund_holdings')

@@ -2,7 +2,7 @@ from datetime import datetime
 from database import db
 from flask import render_template, flash, redirect, url_for, session, request
 from forms import SignUpForm, LoginForm
-from models import User, CompanyData
+from models import User, FundData
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
@@ -36,10 +36,6 @@ def my_routes(app):
             print('Invalid username or password')
         return render_template('login.html', year=datetime.now().year, form=form)
 
-    @app.route('/portfolio_tracker')
-    def portfolio_tracker() -> str:
-        return render_template('portfolio_tracker.html', year=datetime.now().year)
-
     @app.route('/signup', methods=['GET', 'POST'])
     def signup():
         form = SignUpForm()
@@ -68,19 +64,25 @@ def my_routes(app):
         query = request.args.get('query', default='', type=str)
         if not query:
             flash('Please enter a company name or CIK.')
-            return render_template('portfolio_tracker.html', year=datetime.now().year)
+            return render_template('fund_search.html', year=datetime.now().year)
         with app.app_context():
             if query.isdigit():
-                companies = CompanyData.query.filter(CompanyData.cik.like(f'%{query}%')).all()
+                funds = FundData.query.filter(FundData.cik.like(f'%{query}%')).all()
             else:
-                companies = CompanyData.query.filter(CompanyData.company_name.like(f'%{query}%')).all()
-            results = [(company.company_name, company.cik, url_for('fund_details', cik=company.cik)) for company in
-                       companies]
-            return render_template('portfolio_tracker.html', results=results, year=datetime.now().year)
+                funds = FundData.query.filter(FundData.fund_name.like(f'%{query}%')).all()
+            search_results = [(fund.fund_name, fund.cik, url_for('fund_details', cik=fund.cik)) for fund in
+                              funds]
+            return render_template('fund_search.html', results=search_results, year=datetime.now().year,
+                                   show_details_button=True)
 
     @app.route('/fund_details/<cik>')
     def fund_details(cik):
+        fund = FundData.query.filter_by(cik=cik).first()
+        if not fund:
+            flash('No fund found with the given CIK.')
 
-        # Retrieve the fund details using the CIK
-        # Render a template and pass the fund details to it
-        pass
+    @app.route('/portfolio_tracker')
+    def portfolio_tracker() -> str:
+        return render_template('portfolio_tracker.html', year=datetime.now().year)
+
+

@@ -29,7 +29,12 @@
         {% if results %}
       <ul>
         {% for company_name, cik, url in results %}
-          <li><a href="{{ url }}" target="_blank">{{ company_name }}: {{ cik }}</a></li>
+          <li>
+            <a href="{{ url }}" target="_blank">{{ company_name }}: {{ cik }}</a>
+            {% if show_details_button %}
+              <button class="view-details" data-cik="{{ cik }}">View Details</button>
+            {% endif %}
+          </li>
         {% endfor %}
       </ul>
     {% else %}
