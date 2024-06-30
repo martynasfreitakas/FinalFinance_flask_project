@@ -6,4 +6,4 @@ FUNDS.md
 __pycache__/
 .idea/
 sec-edgar-filings/
-*.logfile.log
+.logfile.log
