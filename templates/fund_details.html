@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}
+Fund Details
+{% endblock %}
+
+{% block content %}
+    <h1>Fund Details</h1>
+    <table>
+        <tr>
+            <th>CIK</th>
+            <th>Fund Name</th>
+            <th>Submission Type</th>
+            <th>Filed Date</th>
+        </tr>
+        {% for submission in submissions %}
+        <tr>
+            <td>{{ submission.cik }}</td>
+            <td>{{ submission.company_name }}</td>
+            <td>{{ submission.submission_type }}</td>
+            <td>{{ submission.filed_of_date }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

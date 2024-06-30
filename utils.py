@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 import requests
 from database import db
 import shutil
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 import re
 import logging.config
@@ -68,7 +68,7 @@ def download_and_store_all_companies_names_and_cik_from_edgar():
 
 
 def edgar_downloader_from_sec(fund_cik):
-    filing_types = ['NPORT-P', '13F-HR']
+    filing_types = ['N-Q', 'NPORT-P', '13F-HR']
 
     # Brookfield Investment Funds
     # filing_cik = '0001520738'
@@ -126,6 +126,8 @@ def add_filing_to_db(fund_cik):
                         extract_holdings_from_nport_p(file_path)
                     elif submission_type == '13F-HR':
                         extract_holdings_from_13f_hr(file_path)
+                    else:
+                        print(f"Unknown submission type: {submission_type}")
 
 
 def extract_holdings_from_nport_p(path_to_file):
@@ -310,11 +312,10 @@ def extract_holdings_from_13f_hr(path_to_file):
             db.session.commit()
 
 
+
 if __name__ == "__main__":
     print('test')
-    # BERKSHIRE    HATHAWAY
-    # 0001067983
 
-    edgar_downloader_from_sec('0001814535')
+    edgar_downloader_from_sec('0001061768')
 
     print('completed.')

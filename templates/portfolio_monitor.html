@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Here you can monitor your saved  Funds and it's portfolio</h1>
+    {% set flask_messages = get_flashed_messages() %}
+    {% if flask_messages %}
+    <ul>
+        {% for message in flask_messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div>
+    <form action="{{ url_for('fund_search') }}" method="get">
+      <input type="text" name="query" placeholder="Company Search by Name">
+      <input type="submit" value="Search">
+    </form>
+    </div>
+    <br>
+    <div>
+    <form action="{{ url_for('fund_search') }}" method="get">
+      <input type="text" name="query" placeholder="Company Search by CIK">
+      <input type="submit" value="Search">
+    </form>
+    </div>
+
+    <div class="company-search-results-block">
+      <h2>Search Results</h2>
+        {% if results %}
+      <ul>
+        {% for company_name, cik, url in results %}
+          <li>
+            <a href="{{ url }}" target="_blank">{{ company_name }}: {{ cik }}</a>
+            {% if show_details_button %}
+              <button class="view-details" data-cik="{{ cik }}">View Details</button>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No results found</p>
+    {% endif %}
+  </div>
+
+{% endblock %}

@@ -2,7 +2,7 @@ from datetime import datetime
 from database import db
 from flask import render_template, flash, redirect, url_for, session, request
 from forms import SignUpForm, LoginForm
-from models import User, FundData
+from models import User, FundData, Submission
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
@@ -77,12 +77,17 @@ def my_routes(app):
 
     @app.route('/fund_details/<cik>')
     def fund_details(cik):
-        fund = FundData.query.filter_by(cik=cik).first()
+        fund = Submission.query.filter_by(cik=cik).first()
         if not fund:
             flash('No fund found with the given CIK.')
+            return redirect(url_for('fund_search'))
 
-    @app.route('/portfolio_tracker')
+        all_submissions = Submission.query.filter_by(cik=cik).all()
+
+        return render_template('fund_details.html', fund=fund, submissions=all_submissions, year=datetime.now().year)
+
+    @app.route('/portfolio_monitor')
     def portfolio_tracker() -> str:
-        return render_template('portfolio_tracker.html', year=datetime.now().year)
+        return render_template('portfolio_monitor.html', year=datetime.now().year)
 
 

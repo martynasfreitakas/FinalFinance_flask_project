@@ -24,13 +24,13 @@
                     <ul>
                         <li><a href="{{ url_for('home') }}">Home</a></li>
                         <li><a href="{{ url_for('portfolio_tracker') }}">Portfolio Tracker</a></li>
+                        <li><a href="{{ url_for('fund_search') }}">Fund Search</a></li>
                         <li><a href="{{ url_for('about') }}">About</a></li>
                     </ul>
                 </div>
                 <div class="nav-user">
                     <ul>
                         {% if session['username'] %}
-                        <li><a href="{{ url_for('portfolio_tracker') }}">Portfolio Tracker</a></li>
                         <li><a href="{{ url_for('home') }}">home</a></li>
                         <li><a href="{{ url_for('logout') }}">Logout</a></li>
                         {% else %}
