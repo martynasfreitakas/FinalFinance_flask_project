@@ -2,7 +2,7 @@ from datetime import datetime
 from database import db
 from flask import render_template, flash, redirect, url_for, session, request
 from forms import SignUpForm, LoginForm
-from models import User, FundData, Submission
+from models import User, FundData, Submission, AddFundToFavorites
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from utils import edgar_downloader_from_sec
@@ -64,15 +64,17 @@ def my_routes(app):
     @app.route('/fund_search', methods=['GET'])
     def fund_search():
         query = request.args.get('query', default='', type=str)
+
         if not query:
             flash('Please enter a company name or CIK.')
             return render_template('fund_search.html', year=datetime.now().year)
+
         funds = FundData.query.filter(
-            FundData.cik.like(f'%{query}%')).all() if query.isdigit() else FundData.query.filter(
-            FundData.fund_name.like(f'%{query}%')).all()
-        search_results = [(fund.fund_name, fund.cik, url_for('fund_details', cik=fund.cik)) for fund in funds]
-        return render_template('fund_search.html', results=search_results, year=datetime.now().year,
-                               show_details_button=True)
+            FundData.cik.like(f'%{query}%') if query.isdigit() else
+            FundData.fund_name.like(f'%{query}%')
+        ).all()
+
+        return render_template('fund_search.html', funds=funds, year=datetime.now().year)
 
     @app.route('/fund_details/<cik>')
     def fund_details(cik):
@@ -92,3 +94,61 @@ def my_routes(app):
     @app.route('/portfolio_monitor')
     def portfolio_tracker() -> str:
         return render_template('portfolio_monitor.html', year=datetime.now().year)
+
+    @app.route('/fund_favorites')
+    def fund_favorites():
+        if 'username' not in session:
+            flash('You need to be logged in to view favorites.')
+            return redirect(url_for('login'))
+
+        user = User.query.filter_by(username=session['username']).first()
+        if not user:
+            flash('User not found.')
+            return redirect(url_for('login'))
+
+        favorite_funds = user.favorite_funds
+
+        return render_template('fund_favorites.html', favorite_funds=favorite_funds, year=datetime.now().year)
+
+    @app.route('/add_to_favorites/<int:fund_id>', methods=['POST'])
+    def add_to_favorites(fund_id):
+        if 'username' not in session:
+            flash('You need to be logged in to add favorites.')
+            return redirect(url_for('login'))
+
+        user = User.query.filter_by(username=session['username']).first()
+        if not user:
+            flash('User not found.')
+            return redirect(url_for('login'))
+
+        favorite = AddFundToFavorites.query.filter_by(user_id=user.id, fund_id=fund_id).first()
+        if favorite:
+            flash('Fund is already in favorites.')
+        else:
+            favorite = AddFundToFavorites(user_id=user.id, fund_id=fund_id)
+            db.session.add(favorite)
+            db.session.commit()
+            flash('Fund added to favorites.')
+
+        return redirect(url_for('fund_search'))
+
+    @app.route('/remove_from_favorites/<int:fund_id>', methods=['POST'])
+    def remove_from_favorites(fund_id):
+        if 'username' not in session:
+            flash('Please log in to manage your favorites.', 'error')
+            return redirect(url_for('login'))
+
+        user = User.query.filter_by(username=session['username']).first()
+        if not user:
+            flash('User not found.', 'error')
+            return redirect(url_for('login'))
+
+        favorite_entry = AddFundToFavorites.query.filter_by(user_id=user.id, fund_id=fund_id).first()
+        if favorite_entry:
+            db.session.delete(favorite_entry)
+            db.session.commit()
+            flash('Fund removed from favorites successfully!', 'success')
+        else:
+            flash('Fund not found in favorites.', 'error')
+
+        return redirect(url_for('fund_favorites'))

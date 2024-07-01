@@ -285,7 +285,8 @@ def extract_holdings_from_13f_hr(path_to_file):
                 'accession_number': accession_number,
             }
 
-        data_list = [{'company_name': k, **v} for k, v in data_dict.items()]
+        data_list = [{'company_name': name_of_company_key, **company_details_values} for
+                     name_of_company_key, company_details_values in data_dict.items()]
 
         for data in data_list:
             existing_fund_holding = FundHoldings.query.filter_by(company_name=data['company_name'],

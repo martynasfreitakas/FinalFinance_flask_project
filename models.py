@@ -9,9 +9,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     phone_number = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
-
-    def __repr__(self):
-        return f'<User {self.username}, Name: {self.name}, Email: {self.email}>'
+    favorite_funds = db.relationship('AddFundToFavorites', back_populates='user',  cascade="all, delete-orphan")
 
 
 class FundData(db.Model):
@@ -20,6 +18,7 @@ class FundData(db.Model):
     cik = db.Column(db.String(10), nullable=False)
     submissions = db.relationship('Submission', back_populates='fund_data', cascade="all, delete-orphan")
     fund_holdings = db.relationship('FundHoldings', back_populates='fund_data', cascade="all, delete-orphan")
+    favorites = db.relationship('AddFundToFavorites', back_populates='fund', cascade="all, delete-orphan")
 
 
 class Submission(db.Model):
@@ -43,3 +42,18 @@ class FundHoldings(db.Model):
     accession_number = db.Column(db.String(20), nullable=False)
     fund_data_id = db.Column(db.Integer, db.ForeignKey('fund_data.id'))
     fund_data = db.relationship('FundData', back_populates='fund_holdings')
+
+
+# models.py
+
+class AddFundToFavorites(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    fund_id = db.Column(db.Integer, db.ForeignKey('fund_data.id'), nullable=False)
+    fund = db.relationship('FundData', back_populates='favorites')
+    user = db.relationship('User', back_populates='favorite_funds')
+
+    __table_args__ = (
+        db.UniqueConstraint('user_id', 'fund_id', name='unique_favorite'),
+    )
+

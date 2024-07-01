@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>My Favorite Funds</h1>
+
+{% set flask_messages = get_flashed_messages() %}
+{% if flask_messages %}
+<ul>
+    {% for message in flask_messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<div class="favorite-funds-block">
+    <h2>Favorite Funds</h2>
+    {% if session.get('username') %}
+    {% if favorite_funds %}
+    <ul>
+        {% for favorite in favorite_funds %}
+        <li>
+            <a href="#">{{ favorite.fund.fund_name }}: {{ favorite.fund.cik }}</a>
+            <form action="{{ url_for('remove_from_favorites', fund_id=favorite.fund.id) }}" method="post" style="display: inline;">
+                <button type="submit">Remove from Favorites</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No favorite funds added yet.</p>
+    {% endif %}
+    {% else %}
+    <p>Please log in to view favorite funds.</p>
+    {% endif %}
+</div>
+{% endblock %}

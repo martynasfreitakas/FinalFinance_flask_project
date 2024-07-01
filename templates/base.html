@@ -26,6 +26,9 @@
                     <li><a href="{{ url_for('portfolio_tracker') }}">Portfolio Tracker</a></li>
                     <li><a href="{{ url_for('fund_search') }}">Fund Search</a></li>
                     <li><a href="{{ url_for('about') }}">About</a></li>
+                    {% if session.get('username') %}
+                    <li><a href="{{ url_for('fund_favorites') }}">Fund Favorites</a></li>
+                    {% endif %}
                 </ul>
             </div>
             <div class="nav-user">
