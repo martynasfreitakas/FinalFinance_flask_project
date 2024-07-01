@@ -5,21 +5,34 @@ Fund Details
 {% endblock %}
 
 {% block content %}
-    <h1>Fund Details</h1>
-    <table>
+<h1>Fund Details</h1>
+<table>
+    <thead>
         <tr>
-            <th>CIK</th>
             <th>Fund Name</th>
-            <th>Submission Type</th>
-            <th>Filed Date</th>
+            <th>CIK</th>
         </tr>
-        {% for submission in submissions %}
+    </thead>
+    <tbody>
         <tr>
-            <td>{{ submission.cik }}</td>
-            <td>{{ submission.company_name }}</td>
-            <td>{{ submission.submission_type }}</td>
-            <td>{{ submission.filed_of_date }}</td>
+            <td>{{ fund.company_name }}&emsp;&emsp;&emsp;&emsp;{{ fund.cik }}</td>
         </tr>
-        {% endfor %}
-    </table>
+    </tbody>
+</table>
+
+<br>
+<br>
+<h2>Submissions</h2>
+<table>
+    <tr>
+        <th>Submission Type</th>
+        <th>Filed Date</th>
+    </tr>
+    {% for submission in submissions %}
+    <tr>
+        <td><a href="{{ url_for('submission_details', accession_number=submission.accession_number) }}">{{ submission.submission_type }}</a></td>
+        <td>{{ submission.filed_of_date }}</td>
+    </tr>
+    {% endfor %}
+</table>
 {% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}
+Submission Details
+{% endblock %}
+
+{% block content %}
+<h1>Submission Details</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Accession Number</th>
+            <th>Company Name</th>
+            <th>Submission Type</th>
+            <th>Filed Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ submission.accession_number }}</td>
+            <td>{{ submission.company_name }}</td>
+            <td>{{ submission.submission_type }}</td>
+            <td>{{ submission.filed_of_date }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<br>
+<br>
+<h2>Fund Holdings</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Company Name</th>
+            <th>Value (USD)</th>
+            <th>Share Amount</th>
+            <th>CUSIP</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for holding in holdings %}
+        <tr>
+            <td>{{ holding.company_name }}</td>
+            <td>{{ holding.value_usd }}</td>
+            <td>{{ holding.share_amount }}</td>
+            <td>{{ holding.cusip }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

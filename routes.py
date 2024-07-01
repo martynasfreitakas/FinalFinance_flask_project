@@ -2,7 +2,7 @@ from datetime import datetime
 from database import db
 from flask import render_template, flash, redirect, url_for, session, request
 from forms import SignUpForm, LoginForm
-from models import User, FundData, Submission, AddFundToFavorites
+from models import User, FundData, Submission, AddFundToFavorites, FundHoldings
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from utils import edgar_downloader_from_sec
@@ -152,3 +152,16 @@ def my_routes(app):
             flash('Fund not found in favorites.', 'error')
 
         return redirect(url_for('fund_favorites'))
+
+    @app.route('/submission_details/<accession_number>')
+    def submission_details(accession_number):
+        if 'username' not in session:
+            flash('This is only for registered users. Please sign in or log in.')
+            return redirect(url_for('login'))
+        submission = Submission.query.filter_by(accession_number=accession_number).first()
+        if not submission:
+            flash('No submission found with the given accession number.')
+            return redirect(url_for('fund_search'))
+        holdings = FundHoldings.query.filter_by(accession_number=accession_number).all()
+        return render_template('submission_details.html', submission=submission, holdings=holdings,
+                               year=datetime.now().year)
