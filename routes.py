@@ -5,6 +5,8 @@ from forms import SignUpForm, LoginForm
 from models import User, FundData, Submission
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from utils import edgar_downloader_from_sec
+
 
 def my_routes(app):
     @app.route('/')
@@ -65,29 +67,28 @@ def my_routes(app):
         if not query:
             flash('Please enter a company name or CIK.')
             return render_template('fund_search.html', year=datetime.now().year)
-        with app.app_context():
-            if query.isdigit():
-                funds = FundData.query.filter(FundData.cik.like(f'%{query}%')).all()
-            else:
-                funds = FundData.query.filter(FundData.fund_name.like(f'%{query}%')).all()
-            search_results = [(fund.fund_name, fund.cik, url_for('fund_details', cik=fund.cik)) for fund in
-                              funds]
-            return render_template('fund_search.html', results=search_results, year=datetime.now().year,
-                                   show_details_button=True)
+        funds = FundData.query.filter(
+            FundData.cik.like(f'%{query}%')).all() if query.isdigit() else FundData.query.filter(
+            FundData.fund_name.like(f'%{query}%')).all()
+        search_results = [(fund.fund_name, fund.cik, url_for('fund_details', cik=fund.cik)) for fund in funds]
+        return render_template('fund_search.html', results=search_results, year=datetime.now().year,
+                               show_details_button=True)
 
     @app.route('/fund_details/<cik>')
     def fund_details(cik):
+        if 'username' not in session:
+            flash('This is only for registered users. Please sign in or log in.')
+            return redirect(url_for('login'))
         fund = Submission.query.filter_by(cik=cik).first()
         if not fund:
-            flash('No fund found with the given CIK.')
-            return redirect(url_for('fund_search'))
-
+            edgar_downloader_from_sec(cik)
+            fund = Submission.query.filter_by(cik=cik).first()
+            if not fund:
+                flash('No fund found with the given CIK.')
+                return redirect(url_for('fund_search'))
         all_submissions = Submission.query.filter_by(cik=cik).all()
-
         return render_template('fund_details.html', fund=fund, submissions=all_submissions, year=datetime.now().year)
 
     @app.route('/portfolio_monitor')
     def portfolio_tracker() -> str:
         return render_template('portfolio_monitor.html', year=datetime.now().year)
-
-

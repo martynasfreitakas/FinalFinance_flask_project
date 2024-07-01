@@ -10,5 +10,6 @@ with app.app_context():
     my_db(app)
     my_routes(app)
 
+
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0")
